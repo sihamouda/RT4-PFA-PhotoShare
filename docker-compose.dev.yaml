@@ -24,3 +24,17 @@ services:
     entrypoint: ["/entrypoint.sh"]
     depends_on:
       - cassandra
+
+  photo:
+    build:
+      context: apps/photo
+      target: dev
+    ports:
+      - 8080:8080
+    environment:
+      - CASSANDRA_HOST=${CASSANDRA_HOST}
+    volumes:
+      - ./apps/photo/src:/app/src
+    depends_on:
+      cassandra-init:
+        condition: service_completed_successfully
