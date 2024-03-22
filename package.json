@@ -7,5 +7,12 @@
   ],
   "scripts": {
     "dev": "turbo run dev"
+  },
+  "dependencies": {
+    "@nestjs/config": "^3.2.0",
+    "@nestjs/typeorm": "^10.0.2",
+    "joi": "^17.12.2",
+    "pg": "^8.11.3",
+    "typeorm": "^0.3.20"
   }
 }

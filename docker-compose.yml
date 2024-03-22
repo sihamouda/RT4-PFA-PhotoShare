@@ -1,0 +1,8 @@
+services:
+  cassandra:
+    image: cassandra:3.7
+    ports:
+      - 9046:9042
+    entrypoint: ["./init.sh"]
+    volumes:
+      - ./init-cass.sh:/init.sh

@@ -1,5 +1,5 @@
 start:
-	docker compose --env-file .dev.env -f docker-compose.dev.yaml up --build
+	docker compose --env-file .dev.env -f docker-compose.dev.yaml up --build -d
 stop: 
 	docker compose --env-file .dev.env -f docker-compose.dev.yaml down
 destroy:
