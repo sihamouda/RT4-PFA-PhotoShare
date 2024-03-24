@@ -8,12 +8,12 @@ export class GenericService<T, C, U> {
     constructor(private readonly genericRepository: Repository<T>) { }
 
 
-    async save(entity: any): Promise<T[]> {
+    async save(entity: any): Promise<T> {
         try {
             return this.genericRepository.save(entity)
 
         } catch (error) {
-            console.log(error,"jezaeza");
+            console.log(error);
             
         }
     }
@@ -32,8 +32,16 @@ export class GenericService<T, C, U> {
         const query = {
             id,
         } as FindOptionsWhere<T>
-        const user =  await this.genericRepository.findOne(query);
+        const user =  await this.genericRepository.findOneBy(query);
         return user;
+
+    }
+
+    async findByUsername(username): Promise<T>{
+        const query= {
+            username,
+        } as FindOptionsWhere<T>
+        return await this.genericRepository.findOneBy(query);
 
     }
 
