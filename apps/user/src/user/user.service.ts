@@ -5,8 +5,9 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GenericService } from 'src/generic/generic.service';
 
+
 @Injectable()
-export class UserService extends GenericService<CreateUserDto, CreateUserDto , CreateUserDto>{
+export class UserService extends GenericService<User, CreateUserDto , CreateUserDto>{
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>){
         super(userRepository)
     }

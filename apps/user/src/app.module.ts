@@ -8,7 +8,11 @@ import { User } from './user/user.entity';
 import { GenericService } from './generic/generic.service';
 import { GenericModule } from './generic/generic.module';
 import { Repository } from 'typeorm';
+import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi';
+import { PassportModule } from '@nestjs/passport';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 @Module({
   imports: [ConfigModule.forRoot(
     {
@@ -22,6 +26,7 @@ import * as Joi from 'joi';
         DB_DATABASE: Joi.string().required(),
       }),
       cache: true,
+      isGlobal: true,
     }
   ), TypeOrmModule.forRootAsync({
     imports: [ConfigModule],
@@ -39,7 +44,7 @@ import * as Joi from 'joi';
       }),
     inject: [ConfigService],
 
-  }), UserModule, GenericModule],
+  }), UserModule, GenericModule, AuthModule],
   controllers: [AppController],
   providers: [AppService, GenericService, Repository],
 })
