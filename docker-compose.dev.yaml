@@ -1,26 +1,17 @@
 version: "3.8"
 
 services:
-  cassandra:
-    image: cassandra:5.0
+  data-base:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: photoshare
     ports:
-      - 9042:9042
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "cqlsh",
-          "-u cassandra",
-          "-p cassandra",
-          "-e describe keyspaces",
-        ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-  cassandra-init:
-    image: cassandra:5.0
-    volumes:
-      - ./cassandra/entrypoint.sh:/entrypoint.sh
-    entrypoint: ["/entrypoint.sh"]
-    depends_on:
-      - cassandra
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
