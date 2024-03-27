@@ -4,11 +4,16 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import {CommonNestjsService} from "common-nestjs"
 
 @Injectable()
 export class AuthService {
 
-    constructor(private userService: UserService, private jwtService: JwtService){}
+    constructor(private userService: UserService, private jwtService: JwtService){
+        console.log(CommonNestjsService.helloWorld());
+        
+        
+    }
 
     async validate(username: string, password: string): Promise<User> {
         const user: User = await this.userService.findByUsername(username);
@@ -17,10 +22,10 @@ export class AuthService {
         }
 
         const isMatch: boolean= bcrypt.compareSync(password, user.password);
-
         if(!isMatch){
             throw new BadRequestException("Password is not correct")
         }
+        
         return user;
     }
 

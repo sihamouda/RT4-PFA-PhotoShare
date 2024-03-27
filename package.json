@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "turbo": "^1.12.3"
+    "turbo": "^1.13.0"
   },
   "workspaces": [
     "apps/*",
@@ -13,6 +13,7 @@
     "@nestjs/config": "^3.2.0",
     "@nestjs/typeorm": "^10.0.2",
     "joi": "^17.12.2",
+    "math-helpers": "*",
     "pg": "^8.11.3",
     "typeorm": "^0.3.20"
   }
