@@ -4,15 +4,22 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { QueryExceptionFilter } from 'src/generic/qurty-failed';
 import { QueryFailedError } from 'typeorm';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('user')
 export class UserController {
 
     constructor(private readonly userService: UserService) { }
 
-    @Post()
-    @UseFilters(QueryExceptionFilter)
-    createUser(@Body() createUser: CreateUserDto) {
+    // @Post()
+    // @UseFilters(QueryExceptionFilter)
+    // createUser(@Body() createUser: CreateUserDto) {
+    //     return this.userService.save(createUser)
+
+    // }
+    
+    @MessagePattern({cmd: "createUser"})
+    createUser(createUser: CreateUserDto) {
         return this.userService.save(createUser)
 
     }
@@ -29,6 +36,18 @@ export class UserController {
             return user;
         } catch (error) {
             throw new NotFoundException(`User with id ${id} not found`);
+
+        }
+    }
+
+    
+    @MessagePattern({cmd: "findByUsername"})
+    async findUserByUsername(username: string) {
+        try {
+            const user = await this.userService.findByUsername(username);
+            return user;
+        } catch (error) {
+            throw new NotFoundException(`User with username ${username} not found`);
 
         }
     }
