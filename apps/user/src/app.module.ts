@@ -14,7 +14,7 @@ import { APP_GUARD } from '@nestjs/core';
 @Module({
   imports: [ConfigModule.forRoot(
     {
-      envFilePath: '../.dev.env',
+      envFilePath: '../../.dev.env',
       validationSchema: Joi.object({
         DB_TYPE: Joi.string().required(),
         DB_HOST: Joi.string().required(),

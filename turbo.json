@@ -3,7 +3,11 @@
   "pipeline": {
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "inputs": ["src/**"]
+    },
+    "build":{
+      "cache": false
     }
   }
 }

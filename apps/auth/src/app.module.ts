@@ -9,7 +9,7 @@ import * as Joi from 'joi';
 @Module({
   imports: [AuthModule, GlobalClientsModule, ConfigModule.forRoot(
     {
-      envFilePath: '../.dev.env',
+      envFilePath: '../../.dev.env',
       
       validationSchema: Joi.object({
         DB_TYPE: Joi.string().required(),
