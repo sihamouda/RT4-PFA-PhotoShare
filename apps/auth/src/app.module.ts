@@ -4,6 +4,9 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { GlobalClientsModule } from './global-clients/global-clients.module';
 import { ConfigModule } from '@nestjs/config';
+import { HealthModule } from './health/health.module';
+import { ConsulService } from './consul/consul.service';
+import { ConsulModule } from './consul/consul.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -22,8 +25,8 @@ import * as Joi from 'joi';
       cache: true,
       isGlobal: true,
     }
-  )],
+  ), HealthModule, ConsulModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ConsulService],
 })
 export class AppModule { }

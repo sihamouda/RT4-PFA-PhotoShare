@@ -27,6 +27,7 @@ jobs:
           build-args: |
               PROJECT=user
               PORT=3001
+              
       - name: Build and push auth service
         uses: docker/build-push-action@v5
         with:

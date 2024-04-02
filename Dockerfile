@@ -22,6 +22,8 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/package-lock.json ./package-lock.json
+
+# This can be improved as it takes a long time
 RUN npm update
 RUN npm install
  
