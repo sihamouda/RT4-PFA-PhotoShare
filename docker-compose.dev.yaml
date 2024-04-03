@@ -5,10 +5,10 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: dev
-      POSTGRES_DB: photoshare
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
     ports:
-      - 5432:5432
+      - ${DB_PORT}:5432
 
   adminer:
     image: adminer

@@ -4,15 +4,13 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import {CommonNestjsService} from "common-nestjs"
+import {a} from "commun-nestjs"
 
 @Injectable()
 export class AuthService {
 
     constructor(private userService: UserService, private jwtService: JwtService){
-        console.log(CommonNestjsService.helloWorld());
-        
-        
+        console.log(a)
     }
 
     async validate(username: string, password: string): Promise<User> {

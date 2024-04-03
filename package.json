@@ -1,19 +1,20 @@
 {
   "devDependencies": {
-    "turbo": "^1.13.0"
+    "turbo": "^1.13.0",
+    "dotenv-cli": "^7.4.1"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev"
+    "build": "turbo run build",
+    "dev": "dotenv -e .dev.env -- turbo run dev"
   },
   "dependencies": {
     "@nestjs/config": "^3.2.0",
     "@nestjs/typeorm": "^10.0.2",
     "joi": "^17.12.2",
-    "math-helpers": "*",
     "pg": "^8.11.3",
     "typeorm": "^0.3.20"
   }
