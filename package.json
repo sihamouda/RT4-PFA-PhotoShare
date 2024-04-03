@@ -1,13 +1,15 @@
 {
   "devDependencies": {
-    "turbo": "^1.12.3"
+    "turbo": "^1.13.0",
+    "dotenv-cli": "^7.4.1"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev"
+    "build": "turbo run build",
+    "dev": "dotenv -e .dev.env -- turbo run dev"
   },
   "dependencies": {
     "@nestjs/config": "^3.2.0",
