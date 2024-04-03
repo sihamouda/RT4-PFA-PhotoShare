@@ -1,17 +1,83 @@
 version: "3.8"
 
 services:
-  data-base:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_DATABASE}
-    ports:
-      - ${DB_PORT}:5432
+  # data-base:
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: dev
+  #     POSTGRES_DB: photoshare
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     - app_network
 
-  adminer:
-    image: adminer
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     - app_network
+
+  # user:
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile
+  #     args:
+  #       - PROJECT=user
+  #       - PORT=3001
+  #   restart: always
+  #   networks:
+  #     - app_network
+  #   ports:
+  #     - 3001:3001
+  #   depends_on:
+  #     - data-base
+  #   env_file:
+  #     - .dev.env
+  
+  auth:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        - PROJECT=auth
+        - PORT=3000
     restart: always
+    networks:
+      - app_network
     ports:
-      - 8080:8080
+      - 3000:3000
+
+    env_file:
+      - .dev.env
+    depends_on:
+      - consul
+
+  nginx:
+    image: nginxxx
+    ports:
+      - "8080:8080"
+    networks:
+      - app_network
+    depends_on:
+      - auth
+    links:
+      - auth
+
+
+ 
+
+  consul:
+    image: hashicorp/consul
+    command: "agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0"
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    networks:
+      - app_network
+
+
+networks:
+  app_network:

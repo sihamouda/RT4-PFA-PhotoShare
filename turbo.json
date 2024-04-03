@@ -6,7 +6,9 @@
     "dev": {
       "cache": false,
       "dotEnv": [".dev.env"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "persistent": true,
+      "inputs": ["src/**"]
     }
   }
 }
