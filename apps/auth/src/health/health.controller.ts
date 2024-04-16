@@ -1,27 +1,31 @@
 import { Controller, Get } from '@nestjs/common';
-import { HealthCheck, HealthCheckService, HttpHealthIndicator } from '@nestjs/terminus';
+import {
+  HealthCheck,
+  HealthCheckService,
+  MemoryHealthIndicator,
+} from '@nestjs/terminus';
 import { ConsulService } from 'src/consul/consul.service';
+import { name } from '../../package.json';
 
 @Controller('health')
 export class HealthController {
-    constructor(
-        private health: HealthCheckService,
-        private http: HttpHealthIndicator,
-        private consulService: ConsulService,
-      ) {
-        
-      }
+  constructor(
+    private health: HealthCheckService,
+    private memory: MemoryHealthIndicator,
+    private consulService: ConsulService,
+  ) {}
 
-      @Get()
-      @HealthCheck()
-      check() {
-        return this.health.check([
-          () => this.http.pingCheck('nestjs-docs', 'https://docs.nestjs.com'),
-        ]);
-      }
+  @Get()
+  @HealthCheck()
+  check() {
+    return this.health.check([
+      // The process should not use more than 150MB memory
+      () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
+    ]);
+  }
 
-      @Get("consul")
-      consulTest(){
-        return this.consulService.getServiceInstances("authService")
-      }
+  @Get('consul')
+  consulTest() {
+    return this.consulService.getServiceInstances(name);
+  }
 }

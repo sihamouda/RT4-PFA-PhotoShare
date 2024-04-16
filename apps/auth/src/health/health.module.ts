@@ -6,6 +6,6 @@ import { ConsulModule } from 'src/consul/consul.module';
 
 @Module({
   controllers: [HealthController],
-  imports:[TerminusModule,HttpModule,ConsulModule]
+  imports: [TerminusModule, HttpModule, ConsulModule],
 })
 export class HealthModule {}
