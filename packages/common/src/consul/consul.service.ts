@@ -1,8 +1,7 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Consul from 'consul';
 import { UUID, randomUUID } from 'crypto';
-import { name } from '../../package.json';
 
 type ServiceFQDN = {
   host: string;
@@ -14,15 +13,26 @@ export class ConsulService implements OnModuleInit {
   private consul: Consul;
   private serviceId: UUID;
   private serviceFQDN: ServiceFQDN;
-  constructor(private configService: ConfigService) {
+
+  constructor(
+    private configService: ConfigService,
+    @Inject('SERVICE_NAME') private serviceName: string,
+  ) {
     this.consul = new Consul({
       host: this.configService.get<string>('CONSOL_HOST'),
     });
+    console.log(this.serviceName);
     this.serviceId = randomUUID();
     this.serviceFQDN = {
-      host: this.configService.get<string>('AUTH_HOST'),
+      host: this.configService.get<string>(
+        `${this.serviceName.toUpperCase()}_HOST`,
+      ),
       // Casting to number fails for some reason
-      port: parseInt(this.configService.get<string>('AUTH_PORT')),
+      port: parseInt(
+        this.configService.get<string>(
+          `${this.serviceName.toUpperCase()}_PORT`,
+        ),
+      ),
     };
   }
 
@@ -30,7 +40,7 @@ export class ConsulService implements OnModuleInit {
     try {
       await this.consul.agent.service.register({
         id: this.serviceId,
-        name,
+        name: this.serviceName,
         port: this.serviceFQDN.port,
         address: this.serviceFQDN.host,
         check: {

@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { GlobalClientsModule } from './global-clients/global-clients.module';
 import { ConfigModule } from '@nestjs/config';
-import { HealthModule } from './health/health.module';
-import { ConsulModule } from './consul/consul.module';
 import Joi from 'joi';
+import { name } from '../package.json';
+import { HealthModule } from 'common';
 
 @Module({
   imports: [
@@ -22,8 +22,7 @@ import Joi from 'joi';
       cache: true,
       isGlobal: true,
     }),
-    HealthModule,
-    ConsulModule,
+    HealthModule.register(name),
   ],
 })
 export class AppModule {}

@@ -1,7 +1,13 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
-    "build":{"cache": false},
+    "build":{
+      "cache": false,
+      "outputs": ["dist/**"],
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "dev": {
       "cache": false,
       "dotEnv": [".dev.env"],

@@ -4,8 +4,7 @@ import {
   HealthCheckService,
   MemoryHealthIndicator,
 } from '@nestjs/terminus';
-import { ConsulService } from 'src/consul/consul.service';
-import { name } from '../../package.json';
+import { ConsulService } from '../consul/consul.service';
 
 @Controller('health')
 export class HealthController {
@@ -24,8 +23,8 @@ export class HealthController {
     ]);
   }
 
-  @Get('consul')
-  consulTest() {
-    return this.consulService.getServiceInstances(name);
-  }
+  // @Get('consul')
+  // consulTest() {
+  //   return this.consulService.getServiceInstances(name);
+  // }
 }

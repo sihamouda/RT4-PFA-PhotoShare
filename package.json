@@ -14,16 +14,5 @@
     "build": "turbo run build",
     "dev": "npm run docker:up && dotenv -e .dev.env -- turbo run dev"
   },
-  "dependencies": {
-    "@nestjs/config": "^3.2.0",
-    "@nestjs/jwt": "^10.2.0",
-    "@nestjs/terminus": "^10.2.3",
-    "@nestjs/typeorm": "^10.0.2",
-    "bcrypt": "^5.1.1",
-    "consul": "^1.2.0",
-    "joi": "^17.12.2",
-    "pg": "^8.11.3",
-    "typeorm": "^0.3.20"
-  },
   "packageManager": "npm@10.1.0"
 }
