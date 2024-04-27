@@ -58,7 +58,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-page">
-      <Header title="PhotoShare" />
+      <Header title="PhotoShare"  />
           <HeroSection title="Discover new ideas to try" imageUrl="/discoverImage2.jpg" />
           <div className="content-container"> 
           <section className="trending">

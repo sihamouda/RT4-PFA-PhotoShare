@@ -61,7 +61,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
         </utton>
         {/* Modal */}
       <button type="button" className="profile-button" onClick={handleShow}>
-      <FontAwesomeIcon icon={faUser} />
+      <FontAwesomeIcon  icon={faUser} />
       </button>
 
       <Modal show={show} onHide={handleClose}>

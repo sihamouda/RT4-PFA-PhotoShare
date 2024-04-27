@@ -21,6 +21,7 @@
     "joi": "^17.12.2",
     "pg": "^8.11.3",
     "react-bootstrap": "^2.10.2",
+    "react-icons": "^5.1.0",
     "react-router-dom": "^6.22.3",
     "tailwindcss": "^1.9.6",
     "typeorm": "^0.3.20",
