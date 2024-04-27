@@ -1,68 +1,89 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+.hero {
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    align-items: center; /* Center content horizontally */
+    justify-content: center; /* Center content vertically */
+    height: 100vh;
+  }
+  
+  .hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Stretch image to fill container */
+  }
+  
+  .hero-content {
+    position: absolute; /* Position text on top of image */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Offset to compensate for centering */
+    color: white; /* Adjust text color for visibility */
+    text-align: center; /* Center text alignment */
+    flex: 1;
+  }
+  .content-container {
+    display: flex; /* Enable flexbox layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: flex-start; /* Align items at the top (optional) */
+    /* Adjust other styles as needed (margin, padding, etc.) */
+  }
+  .style {
+    width: auto;
+  }
+  .trending-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Four columns of equal width */
+    /* Optional: Set row height (adjust as needed) */
+    grid-auto-rows: minmax(200px, auto);
+  }
+  .header {
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align buttons to the right */
+  }
+  .big-heading {
+    font-size: 24px;
+  }
+.Signup {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  margin-top: 30px;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
+.Signin {
+  background-color: bisque;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  margin-top: 30px;
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
 }
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
+.center-buttons {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: center;
 }
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.like-button {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  display: flex;
+  align-items: center;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.like-button__icon {
+  margin-right: 5px;
 }
+
