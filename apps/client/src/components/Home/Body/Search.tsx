@@ -8,10 +8,10 @@ const Search: React.FC = () => {
       <IoIosSearch className="search-icon text-black" />
       <input
         type="text"
-        placeholder="Search for recipes, DIY, and more"
+        placeholder="Search for recipes, DIY, and more..."
         className="search-input form-control"
       />
-      <Button  variant="primary">Search</Button>
+      <Button  variant="dark">Search</Button>
     </div>
   );
 };

@@ -49,7 +49,8 @@
     justify-content: flex-end; /* Align buttons to the right */
   }
 .big-heading {
-    font-size: 30px;
+    font-size: 40px;
+    color: rgb(97, 97, 94);
   }
 .Signup {
   display:flex;
@@ -108,7 +109,7 @@
 .search-icon {
   position: absolute;
   left: 10px; /* Adjust the position as needed */
-  top: 78%;
+  top: 80%;
   transform: translateY(-50%);
   z-index: 1;
 }
