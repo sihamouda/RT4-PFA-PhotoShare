@@ -9,34 +9,58 @@ const trendingItems = [
   {
     imageUrl: '/image1.jpg',
     title: 'Topic 1',
+    author: 'author1',
+    date: new Date(),
+    description: 'This is a description',  
   },
   {
     imageUrl: '/image2.jpg',
     title: 'Topic 2',
+    author: 'author2',
+    date: new Date(),
+    description: 'This is a description', 
   },
   {
     imageUrl: '/image3.jpg',
     title: 'Topic 3',
+    author: 'author3',
+    date: new Date(),
+    description: 'This is a description', 
   },
   {
     imageUrl: '/image4.jpg',
     title: 'Topic 4',
+    author: 'author4',
+    date: new Date(),
+    description: 'This is a description', 
   },
   {
     imageUrl: '/image5.jpg',
     title: 'Topic 5',
+    author: 'author5',
+    date: new Date(),
+    description: 'This is a description', 
   },
   {
     imageUrl: '/image6.jpg',
     title: 'Topic 6',
+    author: 'author6',
+    date: new Date(),
+    description: 'This is a description', 
   },
   {
     imageUrl: '/image7.jpg',
     title: 'Topic 7',
+    author: 'author7',
+    date: new Date(),
+    description: 'This is a description', 
   },
   {
     imageUrl: '/image8.jpg',
     title: 'Topic 8',
+    author: 'author8',
+    date: new Date(),
+    description: 'This is a description', 
   },
   // ... Add more trending items here
 ];
@@ -58,7 +82,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-page">
-      <Header title="PhotoShare"  />
+      {/* <Header title="PhotoShare"  /> */}
           <HeroSection title="Discover new ideas to try" imageUrl="/discoverImage2.jpg" />
           <div className="content-container"> 
           <section className="trending">
@@ -66,7 +90,12 @@ const Home: React.FC = () => {
             <div className="trending-cards"  >
             {trendingItems.map((item) => (
               <div >
-              <TrendingCard key={item.title} imageUrl={item.imageUrl} title={item.title} />      
+              <TrendingCard key={item.title} 
+                            imageUrl={item.imageUrl}
+                            title={item.title}
+                            author={item.author}
+                            date={item.date}
+                            description={item.description} />      
               </div>
             ))}
             </div>
