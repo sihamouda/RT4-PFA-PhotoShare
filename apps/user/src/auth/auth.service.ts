@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { UserCreateDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +36,7 @@ export class AuthService {
     return { acessToken: await this.jwtService.signAsync(payload) };
   }
 
-  async register(userToCreate: CreateUserDto) {
+  async register(userToCreate: UserCreateDto) {
     const existingUser = await this.userService.findByUsername(
       userToCreate.username,
     );
@@ -48,7 +48,7 @@ export class AuthService {
 
     const hashedPassword = bcrypt.hashSync(userToCreate.password, 10);
 
-    const newUser = await this.userService.save({
+    const newUser = await this.userService.create({
       username: userToCreate.username,
       password: hashedPassword,
       email: userToCreate.email,

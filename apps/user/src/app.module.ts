@@ -4,19 +4,13 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
-import { User } from './user/user.entity';
-import { GenericService } from './generic/generic.service';
-import { GenericModule } from './generic/generic.module';
 import { Repository } from 'typeorm';
 import * as Joi from 'joi';
-import { PassportModule } from '@nestjs/passport';
-import { APP_GUARD } from '@nestjs/core';
 import { name } from '../package.json';
 import { HealthModule } from 'common';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      // envFilePath: '.env.dev',
       validationSchema: Joi.object({
         DB_TYPE: Joi.string().required(),
         DB_HOST: Joi.string().required(),
@@ -37,16 +31,17 @@ import { HealthModule } from 'common';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        autoLoadEntities: true,
-        synchronize: true,
+        autoLoadEntities:
+          configService.get<string>('NODE_ENV') === 'local' ? true : false,
+        synchronize:
+          configService.get<string>('NODE_ENV') === 'local' ? true : false,
       }),
       inject: [ConfigService],
     }),
     UserModule,
-    GenericModule,
     HealthModule.register(name),
   ],
   controllers: [AppController],
-  providers: [AppService, GenericService, Repository],
+  providers: [AppService, Repository],
 })
 export class AppModule {}
