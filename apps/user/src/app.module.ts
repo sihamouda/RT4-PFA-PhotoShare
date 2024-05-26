@@ -4,17 +4,14 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
-import { User } from './user/user.entity';
-import { GenericService } from './generic/generic.service';
-import { GenericModule } from './generic/generic.module';
 import { Repository } from 'typeorm';
 import * as Joi from 'joi';
-import { PassportModule } from '@nestjs/passport';
-import { APP_GUARD } from '@nestjs/core';
+import { name } from '../package.json';
+import { HealthModule, JwtStrategy } from 'common';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
-  imports: [ConfigModule.forRoot(
-    {
-      // envFilePath: '.dev.env',
+  imports: [
+    ConfigModule.forRoot({
       validationSchema: Joi.object({
         DB_TYPE: Joi.string().required(),
         DB_HOST: Joi.string().required(),
@@ -25,25 +22,44 @@ import { APP_GUARD } from '@nestjs/core';
       }),
       cache: true,
       isGlobal: true,
-    }
-  ), TypeOrmModule.forRootAsync({
-    imports: [ConfigModule],
-    useFactory: (configService: ConfigService) => (
-
-      {
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>("DB_HOST"),
-        port: configService.get<number>("PORT"),
-        username: configService.get<string>("DB_USERNAME"),
-        password: configService.get<string>("DB_PASSWORD"),
-        database: configService.get<string>("DB_DATABASE"),
-        autoLoadEntities: true,
-        synchronize: true,
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_DATABASE'),
+        autoLoadEntities:
+          configService.get<string>('NODE_ENV') === 'local' ? true : false,
+        synchronize:
+          configService.get<string>('NODE_ENV') === 'local' ? true : false,
       }),
-    inject: [ConfigService],
-
-  }), UserModule, GenericModule],
+      inject: [ConfigService],
+    }),
+    UserModule,
+    HealthModule.register(name),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret:
+          configService.get<string>('NODE_ENV') === 'local'
+            ? 'dev_only'
+            : configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: ['local', 'dev'].includes(
+            configService.get<string>('NODE_ENV'),
+          )
+            ? '60s'
+            : '24h',
+        },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
   controllers: [AppController],
-  providers: [AppService, GenericService, Repository],
+  providers: [AppService, Repository, JwtStrategy],
 })
-export class AppModule { }
+export class AppModule {}

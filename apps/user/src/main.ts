@@ -1,16 +1,27 @@
-
 import { NestFactory } from '@nestjs/core';
-import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { AppModule } from './app.module';
-import * as Consul from "consul";
-async function bootstrap() {
+import { ConfigService } from '@nestjs/config';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.TCP,options:{port: 3001}
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.TCP,
+    options: {
+      host:
+        configService.get<string>('NODE_ENV') === 'local'
+          ? 'localhost'
+          : configService.get<string>('USER_HOST'),
+      port: configService.get<number>('USER_TCP_PORT'),
     },
-  );
-  await app.listen();
+  });
+  app.startAllMicroservices();
+
+  await app.listen(configService.get<number>('USER_PORT'), () => {
+    console.log('listening on port', configService.get<number>('USER_PORT'));
+  });
+  console.log(configService.get<number>('USER_PORT'));
 }
 bootstrap();

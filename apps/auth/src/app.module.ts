@@ -1,19 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { GlobalClientsModule } from './global-clients/global-clients.module';
 import { ConfigModule } from '@nestjs/config';
-import { HealthModule } from './health/health.module';
-import { ConsulService } from './consul/consul.service';
-import { ConsulModule } from './consul/consul.module';
-import * as Joi from 'joi';
+import Joi from 'joi';
+import { name } from '../package.json';
+import { HealthModule } from 'common';
 
 @Module({
-  imports: [AuthModule, GlobalClientsModule, ConfigModule.forRoot(
-    {
-      envFilePath: '../../.dev.env',
-      
+  imports: [
+    AuthModule,
+    ConfigModule.forRoot({
       validationSchema: Joi.object({
         DB_TYPE: Joi.string().required(),
         DB_HOST: Joi.string().required(),
@@ -24,9 +19,8 @@ import * as Joi from 'joi';
       }),
       cache: true,
       isGlobal: true,
-    }
-  ), HealthModule, ConsulModule],
-  controllers: [AppController],
-  providers: [AppService, ConsulService],
+    }),
+    HealthModule.register(name),
+  ],
 })
-export class AppModule { }
+export class AppModule {}

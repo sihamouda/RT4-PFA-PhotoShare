@@ -1,21 +1,18 @@
-import { BaseEntity } from "src/generic/base.entity";
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { AbstractEntity } from 'data';
+import { Column, Entity } from 'typeorm';
 
 @Entity()
-export class User extends BaseEntity {
+export class User extends AbstractEntity {
+  @Column({
+    unique: true,
+  })
+  username: string;
 
+  @Column({
+    unique: true,
+  })
+  email: string;
 
-    @Column({
-        unique: true,
-    })
-    username: string;
-
-    @Column({
-        unique: true,
-    })
-    email: string;
-
-    @Column()
-    password: string;
-
+  @Column()
+  password: string;
 }

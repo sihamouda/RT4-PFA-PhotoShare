@@ -1,33 +1,31 @@
-import { Body, Controller, Get, Inject, Post, Req, UseGuards } from '@nestjs/common';
-// import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { Body, Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { User } from 'src/user/user.entity';
-// import { User } from 'src/user/user.entity';
+import { UserCreateDto, LoginDto } from 'dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(@Inject("USER_SERVICE") private userService: ClientProxy, private readonly authService: AuthService){}
+  constructor(
+    @Inject('USER_SERVICE') private userService: ClientProxy,
+    private readonly authService: AuthService,
+  ) {}
 
-    @Post("login")
-    @UseGuards(AuthGuard("local"))
-    async login(@Body() user: CreateUserDto){
-        return this.authService.login(user as User);
-    }
+  @Post('login')
+  @UseGuards(AuthGuard('local'))
+  async login(@Body() user: LoginDto) {
+    return await this.authService.login(user.username, user.password);
+  }
 
+  @Post('register')
+  async register(@Body() newUser: UserCreateDto) {
+    await this.authService.register(newUser);
+    return 'OK';
+  }
 
-
-    @Post("register")
-    register(@Body() newUser: CreateUserDto){
-        return this.authService.register(newUser);
-    }
-
-    @Post("loginJwt")
-    @UseGuards(AuthGuard("jwt"))
-    async loginJwt(@Req() req){
-        return req.user
-    }
+  @Post('test')
+  @UseGuards(AuthGuard('jwt'))
+  async loginJwt(@Req() req) {
+    return req.user;
+  }
 }
