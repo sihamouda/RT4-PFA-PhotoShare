@@ -22,9 +22,4 @@ export class HealthController {
       () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
     ]);
   }
-
-  // @Get('consul')
-  // consulTest() {
-  //   return this.consulService.getServiceInstances(name);
-  // }
 }

@@ -8,6 +8,18 @@ type ServiceFQDN = {
   port: number;
 };
 
+type ConsulServiceInfo = {
+  ID: string;
+  Service: string;
+  Tags: any[];
+  Meta: object;
+  Port: number;
+  Address: string;
+  Weights: object;
+  EnableTagOverride: boolean;
+  Datacenter: string;
+};
+
 @Injectable()
 export class ConsulService implements OnModuleInit {
   private consul: Consul;
@@ -80,22 +92,21 @@ export class ConsulService implements OnModuleInit {
     }
   }
 
-  async getServiceInstances(serviceName: string): Promise<ServiceFQDN[]> {
+  async getServiceInstances(serviceName: string): Promise<ConsulServiceInfo[]> {
     try {
       const services = await this.consul.agent.services();
-      console.log(services);
-      const serviceInstances = Object.values(services).filter(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        (_service) => services.Service === serviceName,
+      const result = Object.values(services).reduce(
+        (acc: ConsulService[], curr: any) => {
+          if (curr.Service != undefined && curr.Service === serviceName) {
+            this.configService.get<string>('NODE_ENV') === 'local'
+              ? acc.push({ ...curr, Address: 'localhost' })
+              : acc.push(curr);
+          }
+          return acc;
+        },
+        [],
       );
-      console.log(services);
-      console.log(serviceInstances);
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      return serviceInstances.map((_service) => ({
-        host: services.Address,
-        port: services.Port,
-      }));
+      return result as ConsulServiceInfo[];
     } catch (error) {
       console.error(`Failed to get instances of service ${serviceName}`, error);
       return [];

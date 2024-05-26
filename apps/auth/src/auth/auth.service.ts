@@ -1,14 +1,10 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-// import { CreateUserDto } from 'src/user/dto/create-user.dto';
-// import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 // import { User } from 'src/user/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
-import { User } from 'src/user/user.entity';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-// import {CommonNestjsService} from "common-nestjs"
+import { UserCreateDto } from 'dto';
 
 @Injectable()
 export class AuthService {
@@ -38,7 +34,7 @@ export class AuthService {
     return user;
   }
 
-  async login(user: User) {
+  async login(user: any) {
     const payload = {
       username: user.username,
       sub: user.id,
@@ -47,7 +43,7 @@ export class AuthService {
     return { acessToken: await this.jwtService.signAsync(payload) };
   }
 
-  async register(userToCreate: CreateUserDto) {
+  async register(userToCreate: UserCreateDto) {
     const userObs = this.userService.send(
       { cmd: 'findByUsername' },
       userToCreate.username,
