@@ -1,16 +1,13 @@
-
 import { NestFactory } from '@nestjs/core';
-import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { AppModule } from './app.module';
-import * as Consul from "consul";
-async function bootstrap() {
+import { ConfigService } from '@nestjs/config';
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.TCP,options:{port: 3001}
-    },
-  );
-  await app.listen();
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  await app.listen(configService.get<number>('USER_PORT'), () => {
+    console.log('listening on port', configService.get<number>('USER_PORT'));
+  });
+  console.log(configService.get<number>('USER_PORT'));
 }
 bootstrap();

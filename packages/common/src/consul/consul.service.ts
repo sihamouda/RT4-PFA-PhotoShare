@@ -19,14 +19,19 @@ export class ConsulService implements OnModuleInit {
     @Inject('SERVICE_NAME') private serviceName: string,
   ) {
     this.consul = new Consul({
-      host: this.configService.get<string>('CONSOL_HOST'),
+      host:
+        this.configService.get<string>('NODE_ENV') === 'local'
+          ? 'localhost'
+          : this.configService.get<string>('CONSOL_HOST'),
     });
-    console.log(this.serviceName);
     this.serviceId = randomUUID();
     this.serviceFQDN = {
-      host: this.configService.get<string>(
-        `${this.serviceName.toUpperCase()}_HOST`,
-      ),
+      host:
+        this.configService.get<string>('NODE_ENV') === 'local'
+          ? 'host.docker.internal'
+          : this.configService.get<string>(
+              `${this.serviceName.toUpperCase()}_HOST`,
+            ),
       // Casting to number fails for some reason
       port: parseInt(
         this.configService.get<string>(
@@ -45,8 +50,14 @@ export class ConsulService implements OnModuleInit {
         address: this.serviceFQDN.host,
         check: {
           http: `http://${this.serviceFQDN.host}:${this.serviceFQDN.port}/health`,
-          interval: '30s',
-          deregistercriticalserviceafter: '1m',
+          interval:
+            this.configService.get<string>('NODE_ENV') === 'local'
+              ? '10s'
+              : '30s',
+          deregistercriticalserviceafter:
+            this.configService.get<string>('NODE_ENV') === 'local'
+              ? '20s'
+              : '1m',
         },
       });
       console.log('Service registered with Consul successfully.');

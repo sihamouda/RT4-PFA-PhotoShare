@@ -20,14 +20,13 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "common":"*",
+    "common": "*",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/typeorm": "^10.0.2",
     "bcrypt": "^5.1.1",
     "joi": "^17.12.2",
     "pg": "^8.11.3",
     "typeorm": "^0.3.20",
-    "@nestjs/axios": "^3.0.2",
     "@nestjs/terminus": "^10.2.3",
     "consul": "^1.2.0",
     "reflect-metadata": "^0.2.0",

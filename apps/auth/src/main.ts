@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-// import * as Consul from 'consul';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +9,5 @@ async function bootstrap() {
     console.log('listening on port', configService.get<number>('AUTH_PORT'));
   });
   console.log(configService.get<number>('AUTH_PORT'));
-  // const consul = new Consul();
 }
 bootstrap();

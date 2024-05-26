@@ -11,10 +11,12 @@ import { Repository } from 'typeorm';
 import * as Joi from 'joi';
 import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
+import { name } from '../package.json';
+import { HealthModule } from 'common';
 @Module({
-  imports: [ConfigModule.forRoot(
-    {
-      // envFilePath: '.dev.env',
+  imports: [
+    ConfigModule.forRoot({
+      // envFilePath: '.env.dev',
       validationSchema: Joi.object({
         DB_TYPE: Joi.string().required(),
         DB_HOST: Joi.string().required(),
@@ -25,25 +27,26 @@ import { APP_GUARD } from '@nestjs/core';
       }),
       cache: true,
       isGlobal: true,
-    }
-  ), TypeOrmModule.forRootAsync({
-    imports: [ConfigModule],
-    useFactory: (configService: ConfigService) => (
-
-      {
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>("DB_HOST"),
-        port: configService.get<number>("PORT"),
-        username: configService.get<string>("DB_USERNAME"),
-        password: configService.get<string>("DB_PASSWORD"),
-        database: configService.get<string>("DB_DATABASE"),
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_DATABASE'),
         autoLoadEntities: true,
         synchronize: true,
       }),
-    inject: [ConfigService],
-
-  }), UserModule, GenericModule],
+      inject: [ConfigService],
+    }),
+    UserModule,
+    GenericModule,
+    HealthModule.register(name),
+  ],
   controllers: [AppController],
   providers: [AppService, GenericService, Repository],
 })
-export class AppModule { }
+export class AppModule {}

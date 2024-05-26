@@ -8,11 +8,11 @@
     "packages/*"
   ],
   "scripts": {
-    "docker:up":"docker compose --env-file .dev.env -f docker-compose.dev.yaml up --build -d",
-    "docker:stop":"docker compose --env-file .dev.env -f docker-compose.dev.yaml down",
-    "docker:destroy":"docker compose --env-file .dev.env -f docker-compose.dev.yaml down -v",
+    "docker:start": "docker compose --env-file .env.dev -f docker-compose.dev.yaml up --build -d",
+    "docker:stop": "docker compose --env-file .env.dev -f docker-compose.dev.yaml down",
+    "docker:destroy": "docker compose --env-file .env.dev -f docker-compose.dev.yaml down -v",
     "build": "turbo run build",
-    "dev": "npm run docker:up && dotenv -e .dev.env -- turbo run dev"
+    "dev": "npm run docker:start && dotenv -e .env.dev -- turbo run dev"
   },
   "packageManager": "npm@10.1.0"
 }
