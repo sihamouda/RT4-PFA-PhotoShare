@@ -7,10 +7,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserUpdateDto } from 'dto';
 import { UserCreateDto } from 'dto';
+import { MessagePattern } from '@nestjs/microservices';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -31,26 +34,34 @@ export class UserController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() dtoCreate: UserCreateDto) {
     return this.userService.create(dtoCreate);
   }
 
-  //   @MessagePattern({ cmd: 'findByUsername' })
-  //   async findUserByUsername(username: string) {
-  //     try {
-  //       const user = await this.userService.findByUsername(username);
-  //       return user;
-  //     } catch (error) {
-  //       throw new NotFoundException(`User with username ${username} not found`);
-  //     }
-  //   }
+  @MessagePattern({ cmd: 'create' })
+  async createOverTCP(@Body() dtoCreate: UserCreateDto) {
+    return this.userService.create(dtoCreate);
+  }
 
+  @MessagePattern({ cmd: 'findByUsername' })
+  async findByUsername(username: string) {
+    try {
+      const user = await this.userService.findByUsername(username);
+      return user;
+    } catch (error) {
+      throw new NotFoundException(`User with username ${username} not found`);
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   updateUserById(@Param('id') id: string, @Body() dtoUpdate: UserUpdateDto) {
     return this.userService.update(parseInt(id), dtoUpdate);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async deleteUserById(@Param('id') id: string) {
     const deleted = await this.userService.delete(parseInt(id));

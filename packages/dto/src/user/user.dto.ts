@@ -14,3 +14,12 @@ export class UserCreateDto {
 
 import { PartialType } from '@nestjs/swagger';
 export class UserUpdateDto extends PartialType(UserCreateDto) {}
+
+export class LoginDto {
+  @IsAlphanumeric()
+  @IsNotEmpty()
+  username: string;
+
+  @IsNotEmpty()
+  password: string;
+}

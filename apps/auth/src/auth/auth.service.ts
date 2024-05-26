@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-// import { User } from 'src/user/user.entity';
+import { User } from 'data';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
@@ -11,16 +11,14 @@ export class AuthService {
   constructor(
     @Inject('USER_SERVICE') private userService: ClientProxy,
     private jwtService: JwtService,
-  ) {
-    // console.log(CommonNestjsService.helloWorld());
-  }
+  ) {}
 
   async validate(username: string, password: string) {
-    console.log('inside', username);
-
-    const userObs = this.userService.send({ cmd: 'findByUsername' }, username);
+    const userObs = this.userService.send<User, string>(
+      { cmd: 'findByUsername' },
+      username,
+    );
     const user = await lastValueFrom(userObs);
-    console.log(user);
 
     if (!user) {
       throw new BadRequestException('User not found');
@@ -34,43 +32,38 @@ export class AuthService {
     return user;
   }
 
-  async login(user: any) {
+  async login(username: string, password: string) {
+    const result = await this.validate(username, password);
     const payload = {
-      username: user.username,
-      sub: user.id,
+      username: result.username,
+      sub: result.id,
     };
 
     return { acessToken: await this.jwtService.signAsync(payload) };
   }
 
   async register(userToCreate: UserCreateDto) {
-    const userObs = this.userService.send(
+    const userObs = this.userService.send<User, string>(
       { cmd: 'findByUsername' },
       userToCreate.username,
     );
+    console.log(userObs);
     const existingUser = await lastValueFrom(userObs);
-    console.log(existingUser);
 
     if (existingUser) {
       throw new BadRequestException('User with email/username already exists');
     }
 
     const hashedPassword = bcrypt.hashSync(userToCreate.password, 10);
-    const newUser = this.userService.send(
-      { cmd: 'createUser' },
+
+    const newUser = this.userService.send<User, UserCreateDto>(
+      { cmd: 'create' },
       {
         username: userToCreate.username,
         password: hashedPassword,
         email: userToCreate.email,
       },
     );
-    const resultUser = await lastValueFrom(newUser);
-    // const newUser= await this.userService.save({
-    //     username: userToCreate.username,
-    //     password: hashedPassword,
-    //     email: userToCreate.email,
-    // })
-
-    return this.login(resultUser);
+    return await lastValueFrom(newUser);
   }
 }

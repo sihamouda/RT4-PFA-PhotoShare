@@ -10,6 +10,8 @@
     "dev": "npm run build -- --watch"
   },
   "dependencies": {
+    "passport-jwt": "^4.0.1",
+    "@nestjs/passport": "^10.0.3",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.1",
     "@nestjs/axios": "^3.0.2",

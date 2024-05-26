@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
-import { GlobalClientsModule } from './global-clients/global-clients.module';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 import { name } from '../package.json';
@@ -9,7 +8,6 @@ import { HealthModule } from 'common';
 @Module({
   imports: [
     AuthModule,
-    GlobalClientsModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         DB_TYPE: Joi.string().required(),

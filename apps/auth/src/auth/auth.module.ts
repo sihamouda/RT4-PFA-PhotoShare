@@ -6,7 +6,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { LocalStrategy } from './strategy/local.strategy';
-import { JwtStrategy } from './strategy/jwt.strategy';
+import { JwtStrategy } from 'common';
+import { ConsulModule, ConsulService, ConsulServiceInfo } from 'common';
+import { name } from '../../package.json';
+import { setTimeout } from 'timers/promises';
 
 @Module({
   providers: [AuthService, LocalStrategy, JwtStrategy],
@@ -16,22 +19,45 @@ import { JwtStrategy } from './strategy/jwt.strategy';
     ClientsModule.registerAsync([
       {
         name: 'USER_SERVICE',
-        useFactory: async (configService: ConfigService) => ({
-          transport: Transport.TCP,
-          options: {
-            host: configService.get<string>('USER_SERVICE_HOST'),
-            port: configService.get<number>('USER_SERVICE_PORT'),
-          },
-        }),
-        inject: [ConfigService],
+        imports: [ConsulModule.register(name)],
+        inject: [ConfigService, ConsulService],
+        useFactory: async (
+          configService: ConfigService,
+          ConsulService: ConsulService,
+        ) => {
+          // waits until service register to consul
+          await setTimeout(60 * 1000);
+
+          const availableUserInstances: ConsulServiceInfo[] =
+            await ConsulService.getServiceInstances('user');
+          console.log('>', availableUserInstances);
+
+          return {
+            transport: Transport.TCP,
+            options: {
+              // select random instance from array of instances
+              host: availableUserInstances[
+                Math.floor(Math.random() * availableUserInstances.length)
+              ].Address,
+              port: configService.get<number>('USER_TCP_PORT'),
+            },
+          };
+        },
       },
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('DB_PASSWORD'),
+        secret:
+          configService.get<string>('NODE_ENV') === 'local'
+            ? 'dev_only'
+            : configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: '600s',
+          expiresIn: ['local', 'dev'].includes(
+            configService.get<string>('NODE_ENV'),
+          )
+            ? '60s'
+            : '24h',
         },
       }),
       inject: [ConfigService],

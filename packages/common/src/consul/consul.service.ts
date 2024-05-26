@@ -8,7 +8,7 @@ type ServiceFQDN = {
   port: number;
 };
 
-type ConsulServiceInfo = {
+export type ConsulServiceInfo = {
   ID: string;
   Service: string;
   Tags: any[];

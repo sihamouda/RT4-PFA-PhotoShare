@@ -2,7 +2,7 @@ import { Body, Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ClientProxy } from '@nestjs/microservices';
-import { UserCreateDto } from 'dto';
+import { UserCreateDto, LoginDto } from 'dto';
 
 @Controller('auth')
 export class AuthController {
@@ -13,16 +13,17 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(AuthGuard('local'))
-  async login(@Body() user: UserCreateDto) {
-    return this.authService.login(user);
+  async login(@Body() user: LoginDto) {
+    return await this.authService.login(user.username, user.password);
   }
 
   @Post('register')
-  register(@Body() newUser: UserCreateDto) {
-    return this.authService.register(newUser);
+  async register(@Body() newUser: UserCreateDto) {
+    await this.authService.register(newUser);
+    return 'OK';
   }
 
-  @Post('loginJwt')
+  @Post('test')
   @UseGuards(AuthGuard('jwt'))
   async loginJwt(@Req() req) {
     return req.user;

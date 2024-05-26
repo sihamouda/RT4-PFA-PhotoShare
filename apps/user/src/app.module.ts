@@ -7,7 +7,8 @@ import { UserModule } from './user/user.module';
 import { Repository } from 'typeorm';
 import * as Joi from 'joi';
 import { name } from '../package.json';
-import { HealthModule } from 'common';
+import { HealthModule, JwtStrategy } from 'common';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,8 +41,25 @@ import { HealthModule } from 'common';
     }),
     UserModule,
     HealthModule.register(name),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret:
+          configService.get<string>('NODE_ENV') === 'local'
+            ? 'dev_only'
+            : configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: ['local', 'dev'].includes(
+            configService.get<string>('NODE_ENV'),
+          )
+            ? '60s'
+            : '24h',
+        },
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, Repository],
+  providers: [AppService, Repository, JwtStrategy],
 })
 export class AppModule {}
