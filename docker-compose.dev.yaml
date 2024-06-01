@@ -111,5 +111,22 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    restart: always
+    # hostname: rabbitmq
+    ports:
+      - 5672:5672  
+      - 15672:15672  
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq  
+    networks:
+      - app_network
+
+volumes:
+  rabbitmq_data:
+
 networks:
   app_network:

@@ -17,6 +17,14 @@ async function bootstrap() {
       port: configService.get<number>('USER_TCP_PORT'),
     },
   });
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: ['amqp://localhost:5672'],
+      queue: 'payment_queue',
+    },
+  });
   app.startAllMicroservices();
 
   await app.listen(configService.get<number>('USER_PORT'), () => {

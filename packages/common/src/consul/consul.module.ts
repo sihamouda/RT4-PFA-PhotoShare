@@ -1,5 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConsulService } from './consul.service';
+import { HealthModule } from '../health/health.module';
 
 @Module({})
 export class ConsulModule {
@@ -14,6 +15,7 @@ export class ConsulModule {
         },
       ],
       exports: [ConsulService],
+      imports: [HealthModule]
     };
   }
 }
