@@ -1,15 +1,18 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import {CreatePaymentDto} from "dto"
+import { ConsulService } from 'common';
 
 @Controller('payment')
 export class PaymentController {
-    constructor(private paymentService: PaymentService){}
+    constructor(private paymentService: PaymentService, private consulService : ConsulService){}
 
     @Post()
     async initatePayment(@Body() payload: CreatePaymentDto){
         
-        return this.paymentService.initiatePayment(payload)
+        // return this.paymentService.initiatePayment(payload)
+        // return this.paymentService.sendPaymentToUser(payload)
+        return this.consulService.getServiceInstances('rabbitmq')
     }
 
     @Post("webhook")
