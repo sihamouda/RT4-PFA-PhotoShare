@@ -1,7 +1,10 @@
 {
   "devDependencies": {
-    "turbo": "^1.13.0",
-    "dotenv-cli": "^7.4.1"
+    "aws-sdk": "^2.1629.0",
+    "dotenv-cli": "^7.4.1",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.5.4",
+    "turbo": "^1.13.0"
   },
   "workspaces": [
     "apps/*",

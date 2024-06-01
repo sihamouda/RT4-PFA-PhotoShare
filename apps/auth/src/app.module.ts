@@ -3,7 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 import { name } from '../package.json';
-import { HealthModule } from 'common';
+import { ConsulModule, HealthModule } from 'common';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { HealthModule } from 'common';
       cache: true,
       isGlobal: true,
     }),
-    HealthModule.register(name),
+    ConsulModule.register(name),
   ],
 })
 export class AppModule {}
