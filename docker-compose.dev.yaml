@@ -120,10 +120,17 @@ services:
     ports:
       - 5672:5672  
       - 15672:15672  
+    environment:
+      -RABBITMQ_CLUSTER_PEER_DISCOVERY_BACKEND: "consul"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq  
+      - ./rabbit/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbit/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    depends_on:
+      - consul
     networks:
       - app_network
+    
 
 volumes:
   rabbitmq_data:
