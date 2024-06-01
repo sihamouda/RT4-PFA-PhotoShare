@@ -12,7 +12,7 @@ import {
 import { UserService } from './user.service';
 import { UserUpdateDto } from 'dto';
 import { UserCreateDto } from 'dto';
-import { MessagePattern } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
@@ -68,5 +68,12 @@ export class UserController {
     if (deleted.affected === 0) {
       throw new NotFoundException('User to delete not found');
     } else return 'User deleted';
+  }
+
+  @EventPattern("order-placed")
+  async updateUserPhotos(@Payload() data){
+    console.log("queue worked", data);
+    
+    return data;
   }
 }

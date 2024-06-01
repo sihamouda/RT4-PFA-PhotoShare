@@ -4,13 +4,16 @@ import { TerminusModule } from '@nestjs/terminus';
 import { HttpModule } from '@nestjs/axios';
 import { ConsulModule } from '../consul/consul.module';
 
-@Module({})
+@Module({
+  controllers: [HealthController],
+  imports: [TerminusModule, HttpModule],
+})
 export class HealthModule {
-  static register(serviceName: string): DynamicModule {
-    return {
-      module: HealthModule,
-      controllers: [HealthController],
-      imports: [TerminusModule, HttpModule, ConsulModule.register(serviceName)],
-    };
-  }
+  // static register(): DynamicModule {
+  //   return {
+  //     module: HealthModule,
+  //     controllers: [HealthController],
+  //     imports: [TerminusModule, HttpModule],
+  //   };
+  // }
 }

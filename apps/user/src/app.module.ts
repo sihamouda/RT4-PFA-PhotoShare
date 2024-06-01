@@ -7,7 +7,7 @@ import { UserModule } from './user/user.module';
 import { Repository } from 'typeorm';
 import * as Joi from 'joi';
 import { name } from '../package.json';
-import { HealthModule, JwtStrategy } from 'common';
+import { ConsulModule, HealthModule, JwtStrategy } from 'common';
 import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
@@ -20,6 +20,7 @@ import { JwtModule } from '@nestjs/jwt';
         DB_PASSWORD: Joi.string().required(),
         DB_DATABASE: Joi.string().required(),
       }),
+      envFilePath: '../../.env.dev',
       cache: true,
       isGlobal: true,
     }),
@@ -40,7 +41,7 @@ import { JwtModule } from '@nestjs/jwt';
       inject: [ConfigService],
     }),
     UserModule,
-    HealthModule.register(name),
+    ConsulModule.register(name),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
