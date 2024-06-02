@@ -4,16 +4,18 @@ import { DeepPartial, Repository, FindOptionsWhere } from 'typeorm';
 export abstract class AbstractService<T extends AbstractEntity> {
   constructor(private asbtractRepository: Repository<T>) {}
 
-  create(dtoCreate: DeepPartial<T>) {
-    return this.asbtractRepository.save(dtoCreate);
+  async create(dtoCreate: DeepPartial<T>) {
+    return await this.asbtractRepository.save(dtoCreate);
   }
 
-  findAll() {
-    return this.asbtractRepository.find();
+  async findAll() {
+    return await this.asbtractRepository.find();
   }
 
-  findOne(id: number) {
-    return this.asbtractRepository.findOneBy({ id } as FindOptionsWhere<T>);
+  async findOne(id: number) {
+    return await this.asbtractRepository.findOneBy({
+      id,
+    } as FindOptionsWhere<T>);
   }
 
   async update(id: number, dtoUpdate) {

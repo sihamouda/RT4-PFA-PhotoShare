@@ -12,7 +12,7 @@ export class UserService extends AbstractService<User> {
     super(userRepository);
   }
 
-  findByUsername(username: string) {
-    return this.userRepository.findOneBy({ username });
+  async findByUsername(username: string) {
+    return await this.userRepository.findOneBy({ username });
   }
 }
