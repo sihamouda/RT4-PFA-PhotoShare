@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -20,14 +21,19 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query('populate') populate: string) {
+    return this.userService.findAll(
+      populate && populate.toLocaleLowerCase() === 'true',
+    );
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string) {
+  async findById(@Param('id') id: string, @Query('populate') populate: string) {
     try {
-      const user = await this.userService.findOne(parseInt(id));
+      const user = await this.userService.findOne(
+        parseInt(id),
+        populate && populate.toLocaleLowerCase() === 'true',
+      );
       return user;
     } catch (error) {
       throw new NotFoundException(`User with id ${id} not found`);

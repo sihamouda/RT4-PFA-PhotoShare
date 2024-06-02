@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Photo } from 'data';
+import { Photo, User } from 'data';
 import { Repository } from 'typeorm';
 import { AbstractService } from 'data';
 import { InjectMinio } from 'nestjs-minio';
 import { TagService } from './tag.service';
 import { PhotoCreateDto } from 'dto';
 import { ConfigService } from '@nestjs/config';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class PhotoService extends AbstractService<Photo> {
@@ -16,6 +18,7 @@ export class PhotoService extends AbstractService<Photo> {
     @InjectMinio() private readonly minioClient,
     private readonly tagService: TagService,
     private readonly configService: ConfigService,
+    @Inject('USER_SERVICE') private userService: ClientProxy,
   ) {
     super(photoRepository);
   }
@@ -29,6 +32,16 @@ export class PhotoService extends AbstractService<Photo> {
     await this.minioClient.putObject(this.bucket, filePath, file.buffer);
     console.log(typeof dtoCreate.tags);
 
+    const userObs = this.userService.send<User, string>(
+      { cmd: 'findByUsername' },
+      dtoCreate.username,
+    );
+    const user = await lastValueFrom(userObs);
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
     const tags = await Promise.all(
       JSON.parse(dtoCreate.tags).map(
         async (element: string) =>
@@ -40,6 +53,7 @@ export class PhotoService extends AbstractService<Photo> {
       ...dtoCreate,
       tags,
       uri: filePath,
+      owner: user,
     });
   }
 }
