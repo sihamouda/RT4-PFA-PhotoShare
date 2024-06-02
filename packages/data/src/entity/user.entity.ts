@@ -1,5 +1,6 @@
 import { AbstractEntity } from '../abstract/entity.abstact';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Photo } from './photo.entity';
 
 @Entity()
 export class User extends AbstractEntity {
@@ -15,4 +16,7 @@ export class User extends AbstractEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Photo, (photo) => photo.owner)
+  photos: Photo[];
 }

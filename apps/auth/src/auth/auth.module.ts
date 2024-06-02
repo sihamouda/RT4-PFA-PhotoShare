@@ -56,7 +56,7 @@ import { setTimeout } from 'timers/promises';
           expiresIn: ['local', 'dev'].includes(
             configService.get<string>('NODE_ENV'),
           )
-            ? '60s'
+            ? '3m'
             : '24h',
         },
       }),

@@ -20,6 +20,37 @@ services:
     networks:
       - app_network
 
+  minio:
+    image: quay.io/minio/minio:RELEASE.2024-01-18T22-51-28Z
+    command: server --console-address ":9001" /home/shared
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    healthcheck:
+      test: timeout 5s bash -c ':> /dev/tcp/127.0.0.1/9000' || exit 1
+      interval: 30s
+      timeout: 20s
+
+  minio-bootstrap:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_DEFAULT_BUCKETS: ${MINIO_DEFAULT_BUCKETS}
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set remote http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb remote/$${MINIO_DEFAULT_BUCKETS};
+      /usr/bin/mc anonymous set public remote/$${MINIO_DEFAULT_BUCKETS};
+      exit 0;
+      "
+
   # user:
   #   build:
   #     context: .
