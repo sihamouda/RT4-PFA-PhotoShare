@@ -5,14 +5,15 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport, ClientProxyFactory, ClientProxy } from '@nestjs/microservices';
 import * as Joi from 'joi';
-import { ConsulModule, ConsulService, ConsulServiceInfo } from 'common';
+import { ConsulModule, ConsulService, ConsulServiceInfo, HealthModule } from 'common';
 import { name } from '../../package.json';
+import { setTimeout } from 'timers/promises';
 
 @Module({
   controllers: [PaymentController],
   providers: [PaymentService],
   imports: [
-    HttpModule,
+    HttpModule,HealthModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         PAYMENT_QUEUE_NAME: Joi.string().required(),
@@ -28,6 +29,8 @@ import { name } from '../../package.json';
           configService: ConfigService,
           consulService: ConsulService,
         ) => {
+          await setTimeout(60 * 1000);
+
           const availableUserInstances: ConsulServiceInfo[] =
             await consulService.getServiceInstances('rabbitmq');
           const urls = availableUserInstances.map(
