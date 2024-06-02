@@ -10,9 +10,9 @@ export class PaymentController {
     @Post()
     async initatePayment(@Body() payload: CreatePaymentDto){
         
-        // return this.paymentService.initiatePayment(payload)
+        return this.paymentService.initiatePayment(payload)
         // return this.paymentService.sendPaymentToUser(payload)
-        return this.consulService.getServiceInstances('rabbitmq')
+        // return this.consulService.getServiceInstances('rabbitmq')
     }
 
     @Post("webhook")
