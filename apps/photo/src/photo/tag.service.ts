@@ -22,4 +22,24 @@ export class TagService extends AbstractService<Tag> {
 
     return tag;
   }
+
+  async findAll(isPopulated: boolean = false) {
+    return await this.tagRepository.find({
+      relations: { photos: isPopulated },
+    });
+  }
+
+  async findOne(id: number, isPopulated: boolean = false) {
+    return await this.tagRepository.findOne({
+      where: { id },
+      relations: { photos: isPopulated },
+    });
+  }
+
+  async findOneByName(name: string, isPopulated: boolean = false) {
+    return await this.tagRepository.findOne({
+      where: { name },
+      relations: { photos: isPopulated },
+    });
+  }
 }

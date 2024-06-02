@@ -15,4 +15,17 @@ export class UserService extends AbstractService<User> {
   async findByUsername(username: string) {
     return await this.userRepository.findOneBy({ username });
   }
+
+  async findAll(isPopulated: boolean = false) {
+    return await this.userRepository.find({
+      relations: { photos: isPopulated },
+    });
+  }
+
+  async findOne(id: number, isPopulated: boolean = false) {
+    return await this.userRepository.findOne({
+      where: { id },
+      relations: { photos: isPopulated },
+    });
+  }
 }
