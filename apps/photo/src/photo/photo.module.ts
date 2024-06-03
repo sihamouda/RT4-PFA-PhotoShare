@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PhotoService } from './photo.service';
 import { PhotoController } from './photo.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Photo, Tag, User } from 'data';
+import { Photo, Tag, User, Order } from 'data';
 import { TagService } from './tag.service';
 import { NestMinioModule } from 'nestjs-minio/dist/nest-minio.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -15,7 +15,7 @@ import { setTimeout } from 'timers/promises';
   providers: [PhotoService, TagService],
   controllers: [PhotoController],
   imports: [
-    TypeOrmModule.forFeature([User, Photo, Tag]),
+    TypeOrmModule.forFeature([User, Photo, Tag, Order]),
     ClientsModule.registerAsync([
       {
         name: 'USER_SERVICE',

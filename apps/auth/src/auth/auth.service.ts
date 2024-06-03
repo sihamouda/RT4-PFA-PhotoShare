@@ -62,6 +62,9 @@ export class AuthService {
         username: userToCreate.username,
         password: hashedPassword,
         email: userToCreate.email,
+        firstName: userToCreate.firstName,
+        lastName: userToCreate.lastName,
+        phoneNumber: userToCreate.phoneNumber,
       },
     );
     return await lastValueFrom(newUser);

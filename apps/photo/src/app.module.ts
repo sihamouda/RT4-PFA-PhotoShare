@@ -5,7 +5,7 @@ import { PhotoModule } from './photo/photo.module';
 import { Repository } from 'typeorm';
 import * as Joi from 'joi';
 import { name } from '../package.json';
-import { HealthModule, JwtStrategy } from 'common';
+import { ConsulModule, JwtStrategy } from 'common';
 import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
@@ -38,7 +38,7 @@ import { JwtModule } from '@nestjs/jwt';
       inject: [ConfigService],
     }),
     PhotoModule,
-    HealthModule.register(name),
+    ConsulModule.register(name),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

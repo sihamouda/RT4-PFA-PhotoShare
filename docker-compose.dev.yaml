@@ -111,26 +111,23 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-
   rabbitmq:
     image: rabbitmq:3.13-management
     container_name: rabbitmq
     restart: always
-    # hostname: rabbitmq
     ports:
-      - 5672:5672  
-      - 15672:15672  
+      - 5672:5672
+      - 15672:15672
     environment:
       -RABBITMQ_CLUSTER_PEER_DISCOVERY_BACKEND: "consul"
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq  
+      - rabbitmq_data:/var/lib/rabbitmq
       - ./rabbit/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       - ./rabbit/enabled_plugins:/etc/rabbitmq/enabled_plugins
     depends_on:
       - consul
     networks:
       - app_network
-    
 
 volumes:
   rabbitmq_data:
