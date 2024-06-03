@@ -7,7 +7,7 @@ import { UserModule } from './user/user.module';
 import { Repository } from 'typeorm';
 import * as Joi from 'joi';
 import { name } from '../package.json';
-import { ConsulModule, HealthModule, JwtStrategy } from 'common';
+import { ConsulModule, JwtStrategy } from 'common';
 import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [

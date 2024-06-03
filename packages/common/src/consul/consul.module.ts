@@ -15,7 +15,7 @@ export class ConsulModule {
         },
       ],
       exports: [ConsulService],
-      imports: [HealthModule]
+      imports: [HealthModule],
     };
   }
 }

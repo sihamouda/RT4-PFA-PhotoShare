@@ -17,6 +17,7 @@ import { PhotoCreateDto, PhotoUpdateDto } from 'dto';
 // import { MessagePattern } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('photo')
 export class PhotoController {
@@ -56,15 +57,15 @@ export class PhotoController {
     }
   }
 
-  // @MessagePattern({ cmd: 'findByUsername' })
-  // async findByUsername(username: string) {
-  //   try {
-  //     const user = await this.photoService.findByUsername(username);
-  //     return user;
-  //   } catch (error) {
-  //     throw new NotFoundException(`User with username ${username} not found`);
-  //   }
-  // }
+  @MessagePattern({ cmd: 'findById' })
+  async findByUsername(id: string) {
+    try {
+      const user = await this.photoService.findOne(parseInt(id));
+      return user;
+    } catch (error) {
+      throw new NotFoundException(`Photo with username ${id} not found`);
+    }
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')

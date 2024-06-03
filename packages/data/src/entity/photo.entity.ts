@@ -1,7 +1,8 @@
 import { AbstractEntity } from '../abstract/entity.abstact';
-import { Column, Entity, ManyToOne, ManyToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, ManyToMany, OneToMany } from 'typeorm';
 import { User } from './user.entity';
 import { Tag } from './tag.entity';
+import { Order } from './order.entity';
 
 // type Dimension = {
 //   x: number;
@@ -29,4 +30,7 @@ export class Photo extends AbstractEntity {
 
   @ManyToOne(() => User, (user) => user.photos)
   owner: User;
+
+  @OneToMany(() => Order, (order) => order.photo)
+  orders: Order[];
 }
