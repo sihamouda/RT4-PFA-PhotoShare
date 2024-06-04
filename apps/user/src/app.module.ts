@@ -9,6 +9,7 @@ import * as Joi from 'joi';
 import { name } from '../package.json';
 import { ConsulModule, HealthModule, JwtStrategy } from 'common';
 import { JwtModule } from '@nestjs/jwt';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -58,7 +59,11 @@ import { JwtModule } from '@nestjs/jwt';
         },
       }),
       inject: [ConfigService],
-    }),
+    }),PrometheusModule.register({
+      defaultLabels:{
+        app: name,
+      }
+    })
   ],
   controllers: [AppController],
   providers: [AppService, Repository, JwtStrategy],

@@ -17,5 +17,9 @@
     "build": "turbo run build",
     "dev": "npm run docker:start && dotenv -e .env.dev -- turbo run dev"
   },
-  "packageManager": "npm@10.1.0"
+  "packageManager": "npm@10.1.0",
+  "dependencies": {
+    "@willsoto/nestjs-prometheus": "^6.0.0",
+    "prom-client": "^15.1.2"
+  }
 }

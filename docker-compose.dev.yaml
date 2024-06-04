@@ -100,9 +100,42 @@ services:
     networks:
       - app_network
     
+  prometheus:
+    image: prom/prometheus
+    restart: unless-stopped
+    ports:
+      - 9090:9090
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - app_network
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+    depends_on:
+      - consul
+
+
+  grafana:
+    image: grafana/grafana
+    restart: unless-stopped
+    ports:
+      - 3009:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+    networks:
+      - app_network
+    depends_on:
+      - prometheus
 
 volumes:
   rabbitmq_data:
+  prometheus_data:
+  grafana_data:
+
 
 networks:
   app_network:

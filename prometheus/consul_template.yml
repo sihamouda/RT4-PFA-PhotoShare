@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: 'nestjs-app'
+    static_configs:
+      - targets: [{{- range service "user" }}'{{ .Address }}:{{ .Port }}', {{- end }}]
+    metrics_path: /metrics
+    scrape_interval: 5s
