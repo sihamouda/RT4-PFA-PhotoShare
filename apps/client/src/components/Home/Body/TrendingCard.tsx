@@ -28,7 +28,7 @@ const TrendingCard: React.FC<TrendingCardProps> = ({ imageUrl, title, author, da
     //   {/* Add other content or links here (optional) */}
     // </div>
     <>
-      <Link to={`/card/${encodeURIComponent(imageUrl)}/${encodeURIComponent(title)}/${encodeURIComponent(author || 'unknown')}/${encodeURIComponent(String(date))}/${encodeURIComponent(description|| 'no description')}`} className="card-link">
+      <Link to={`/card/${encodeURIComponent(imageUrl)}/${encodeURIComponent(title)}/${encodeURIComponent(author || 'unknown')}/${encodeURIComponent(String(date))}/${encodeURIComponent(description|| 'no')}`} className="card-link">
       <div
       className="card"
       style={{ width: '18rem', cursor: 'pointer', overflow: 'hidden' }}

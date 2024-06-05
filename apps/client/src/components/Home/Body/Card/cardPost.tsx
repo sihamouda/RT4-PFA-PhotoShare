@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { useNavigate } from 'react-router-dom';
 import TrendingCard from '../TrendingCard';
 import { Route, Routes, useParams } from 'react-router-dom';
 
@@ -25,8 +25,11 @@ const cardPost: React.FC = () => {
   // const imageUrl = '/image1.jpg';
   // const title = 'Topic 1';
 
-  const handleClick = () => {
-    console.log('Button clicked');
+  const navigate = useNavigate();
+
+  const handleBuyButtonClick = () => {
+    // Handle the buy button click event
+    navigate('/checkout');
   }
 
   const { imageUrl, title, author, date, description } = useParams<{
@@ -72,7 +75,7 @@ const cardPost: React.FC = () => {
             <h6 className="card-title">Buy</h6>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <p className="card-text" style={{ color: 'gray' }}>$2.99</p>
-              <button className="btn btn-primary">Buy</button>
+              <button className="btn btn-primary" onClick={handleBuyButtonClick} >Buy</button>
             </div>
           </div>
         </div>

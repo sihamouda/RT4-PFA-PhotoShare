@@ -12,6 +12,7 @@ import Home from './pages/Home';
 import Login from './components/Login/Login';
 import CardPost from './components/Home/Body/Card/cardPost';
 import Header from './components/Home/Header/Header';
+import Checkout from './components/Home/Body/Checkout/Checkout';
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/card/:imageUrl/:title/:author/:date/:description" element={<CardPost />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
       </div>
     </Router>
