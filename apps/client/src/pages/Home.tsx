@@ -1,4 +1,3 @@
-// src/pages/Home.tsx
 import React, { useState } from 'react';
 import Header from '../components/Home/Header/Header';
 import HeroSection from '../components/Home/Body/HeroSection';
@@ -71,11 +70,11 @@ const Home: React.FC = () => {
     const [showCardPost, setShowCardPost] = useState(true);
     // state for showing the discover section
     const [showHeroSection, setShowHeroSection] = useState(true);
-    //fonction to handle showCardPost state
+    // function to handle showCardPost state
     const handleCardClick = () => {
       setShowCardPost(!showCardPost);
     };
-    //fonction to handle discover section state
+    // function to handle discover section state
     const handleHeroClick = () => {
       setShowHeroSection(!showHeroSection);
     }
@@ -88,14 +87,15 @@ const Home: React.FC = () => {
           <section className="trending">
             <h2>Trending today</h2>
             <div className="trending-cards"  >
-            {trendingItems.map((item) => (
-              <div >
-              <TrendingCard key={item.title} 
-                            imageUrl={item.imageUrl}
-                            title={item.title}
-                            author={item.author}
-                            date={item.date}
-                            description={item.description} />      
+            {trendingItems.map((item, index) => (
+              <div key={index}>
+                <TrendingCard
+                  imageUrl={item.imageUrl}
+                  title={item.title}
+                  author={item.author}
+                  date={item.date}
+                  description={item.description}
+                />
               </div>
             ))}
             </div>
