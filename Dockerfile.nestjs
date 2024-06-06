@@ -1,0 +1,44 @@
+FROM --platform=linux/amd64 node:18-slim AS base
+ARG APP
+RUN apt-get update && apt-get install -y libc6 openssl ca-certificates
+WORKDIR /app
+
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+
+
+FROM base AS builder
+# Set working directory
+WORKDIR /app
+RUN npm i -g turbo@1.13.0
+COPY . .
+RUN turbo prune --scope=${APP} --docker
+
+FROM base AS installer
+WORKDIR /app
+
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/package-lock.json ./package-lock.json
+RUN npm install
+
+COPY --from=builder /app/out/full/ .
+COPY turbo.json turbo.json
+
+# Uncomment and use build args to enable remote caching
+# ARG TURBO_TEAM
+# ENV TURBO_TEAM=$TURBO_TEAM
+
+# ARG TURBO_TOKEN
+# ENV TURBO_TOKEN=$TURBO_TOKEN
+RUN npm i -g turbo@1.13.0
+RUN turbo build --filter=${APP}...
+
+FROM base AS runner
+ENV APP_DIR=${APP}
+# used to convert pdfs to images for OCR
+RUN addgroup --system --gid 1001 nestjs
+RUN adduser --system --uid 1001 nestjs
+USER nestjs
+COPY --from=installer --chown=nestjs:nestjs /app .
+
+
+CMD cd /app/apps/${APP_DIR} && npm run dev

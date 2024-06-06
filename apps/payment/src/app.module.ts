@@ -27,16 +27,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        autoLoadEntities:
-          configService.get<string>('NODE_ENV') === 'local' ? true : false,
-        synchronize:
-          configService.get<string>('NODE_ENV') === 'local' ? true : false,
+        autoLoadEntities: ['local', 'development'].includes(
+          configService.get<string>('NODE_ENV'),
+        )
+          ? true
+          : false,
+        synchronize: ['local', 'development'].includes(
+          configService.get<string>('NODE_ENV'),
+        )
+          ? true
+          : false,
       }),
       inject: [ConfigService],
     }),
     ConsulModule.register(name),
   ],
-  controllers: [AppController, PaymentController],
-  providers: [AppService, PaymentService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

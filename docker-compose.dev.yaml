@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  data-base:
+  database:
     image: postgres
     restart: unless-stopped
     environment:
@@ -9,16 +9,12 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
     ports:
       - ${DB_PORT}:5432
-    networks:
-      - app_network
 
   adminer:
     image: adminer
     restart: unless-stopped
     ports:
       - 9999:8080
-    networks:
-      - app_network
 
   minio:
     image: quay.io/minio/minio:RELEASE.2024-01-18T22-51-28Z
@@ -51,54 +47,88 @@ services:
       exit 0;
       "
 
-  # user:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #     args:
-  #       - PROJECT=user
-  #       - PORT=3001
-  #   restart: unless-stopped
-  #   networks:
-  #     - app_network
-  #   ports:
-  #     - 3001:3001
-  #   depends_on:
-  #     - data-base
-  #   env_file:
-  #     - .env.dev
+  user:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.nestjs
+      args:
+        - APP=user
+    # entrypoint: sh
+    # tty: true
+    restart: unless-stopped
+    ports:
+      - ${USER_PORT}:${USER_PORT}
+    depends_on:
+      - database
+      - consul
+      - rabbitmq
+    env_file:
+      - ./.env.dev
 
-  # auth:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #     args:
-  #       - PROJECT=auth
-  #       - PORT=3000
-  #   restart: unless-stopped
-  #   entrypoint: sh
-  #   tty: true
-  #   networks:
-  #     - app_network
-  #   ports:
-  #     - 3000:3000
-  #   env_file:
-  #     - .env.dev
-  #   depends_on:
-  #     - consul
+  photo:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.nestjs
+      args:
+        - APP=photo
+    restart: always
+    ports:
+      - ${PHOTO_PORT}:${PHOTO_PORT}
+    depends_on:
+      - database
+      - consul
+    env_file:
+      - ./.env.dev
 
-  # nginx:
-  #   build: ./nginx
-  #   ports:
-  #     - "8080:8080"
-  #   networks:
-  #     - app_network
-  #   extra_hosts:
-  #   - "auth:host-gateway"
-  # depends_on:
-  #   - auth
-  # links:
-  #   - auth
+  payment:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.nestjs
+      args:
+        - APP=payment
+    restart: always
+    ports:
+      - ${PAYMENT_PORT}:${PAYMENT_PORT}
+    depends_on:
+      - database
+      - photo
+      - user
+      - consul
+      - rabbitmq
+    env_file:
+      - ./.env.dev
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.nestjs
+      args:
+        - APP=auth
+    restart: always
+    ports:
+      - ${AUTH_PORT}:${AUTH_PORT}
+    env_file:
+      - .env.dev
+    depends_on:
+      - consul
+      - user
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:8080"
+      - "443:443"
+    depends_on:
+      - auth
+      - user
+      - payment
+      - rabbitmq
+      - photo
+      - minio
+      - database
+      - consul
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   consul:
     image: hashicorp/consul
@@ -106,8 +136,6 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600/udp"
-    networks:
-      - app_network
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -126,11 +154,6 @@ services:
       - ./rabbit/enabled_plugins:/etc/rabbitmq/enabled_plugins
     depends_on:
       - consul
-    networks:
-      - app_network
 
 volumes:
   rabbitmq_data:
-
-networks:
-  app_network:
