@@ -18,4 +18,9 @@ RUN rm -v /etc/nginx/conf.d/*
 ADD nginx.conf /etc/consul-templates/nginx.conf
 ADD index.html /etc/consul-templates/index.html
 
+COPY ./selfsigned/ssl/certs/nginx-selfsigned.crt /etc/ssl/certs/nginx-selfsigned.crt
+COPY ./selfsigned/ssl/private/nginx-selfsigned.key /etc/ssl/private/nginx-selfsigned.key
+
+RUN openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+
 CMD ["/usr/bin/runsvdir", "/etc/service"]

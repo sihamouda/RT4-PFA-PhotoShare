@@ -19,10 +19,9 @@ import { OrderService } from './order.service';
 
 @Module({
   controllers: [PaymentController],
-  providers: [PaymentService],
+  providers: [PaymentService, OrderService],
   imports: [
     HttpModule,
-    OrderService,
     TypeOrmModule.forFeature([User, Photo, Tag, Order]),
     ConfigModule.forRoot({
       validationSchema: Joi.object({

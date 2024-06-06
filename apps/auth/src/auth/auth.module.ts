@@ -53,7 +53,7 @@ import { setTimeout } from 'timers/promises';
             ? 'dev_only'
             : configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: ['local', 'dev'].includes(
+          expiresIn: ['local', 'development'].includes(
             configService.get<string>('NODE_ENV'),
           )
             ? '3m'

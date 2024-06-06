@@ -21,7 +21,10 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: ['amqp://localhost:5672'],
+      urls:
+        configService.get<string>('NODE_ENV') === 'local'
+          ? ['amqp://localhost:5672']
+          : [`amqp://${configService.get<string>('RMQ_HOST')}:5672`],
       queue: 'payment_queue',
     },
   });

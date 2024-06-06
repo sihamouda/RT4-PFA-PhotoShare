@@ -11,9 +11,9 @@
     "packages/*"
   ],
   "scripts": {
-    "docker:start": "docker compose --env-file .env.dev -f docker-compose.dev.yaml up --build -d",
-    "docker:stop": "docker compose --env-file .env.dev -f docker-compose.dev.yaml down",
-    "docker:destroy": "docker compose --env-file .env.dev -f docker-compose.dev.yaml down -v",
+    "docker:start": "docker compose --env-file .env.dev -f ./docker-compose.dev.yaml up --build -d",
+    "docker:stop": "docker compose --env-file .env.dev -f ./docker-compose.dev.yaml down",
+    "docker:destroy": "docker compose --env-file .env.dev -f ./docker-compose.dev.yaml down -v",
     "build": "turbo run build",
     "dev": "npm run docker:start && dotenv -e .env.dev -- turbo run dev"
   },

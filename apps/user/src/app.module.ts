@@ -33,10 +33,16 @@ import { JwtModule } from '@nestjs/jwt';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        autoLoadEntities:
-          configService.get<string>('NODE_ENV') === 'local' ? true : false,
-        synchronize:
-          configService.get<string>('NODE_ENV') === 'local' ? true : false,
+        autoLoadEntities: ['local', 'development'].includes(
+          configService.get<string>('NODE_ENV'),
+        )
+          ? true
+          : false,
+        synchronize: ['local', 'development'].includes(
+          configService.get<string>('NODE_ENV'),
+        )
+          ? true
+          : false,
       }),
       inject: [ConfigService],
     }),
@@ -50,7 +56,7 @@ import { JwtModule } from '@nestjs/jwt';
             ? 'dev_only'
             : configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: ['local', 'dev'].includes(
+          expiresIn: ['local', 'development'].includes(
             configService.get<string>('NODE_ENV'),
           )
             ? '60s'
